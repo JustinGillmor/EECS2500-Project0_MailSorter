@@ -1,0 +1,86 @@
+/**
+ * This is the RadixSort class that takes the ArrayList and creates a 2d array of "bins"
+ * that help move the AddressObj in and out of the bins. Eventually, after the last increment, 
+ * the ArrayList will be sorted by the zip code in each AddressObj.
+ */
+import java.util.ArrayList;
+
+public class RadixSort 
+{
+	//The amount of bins there are (one bin for each digit 0-9)
+	private static final int arrayDimension = 10;
+	//Keeps track of what digit the Addresses are being ordered by
+	private int zipLength = 1;
+	
+	
+	//Create a sort method that takes an ArrayList and returns nothing.
+	public void sortArray(ArrayList<AddressObj> addressObjList)
+	{
+		//Created a 2d array for bins and a 1d array to keep track of how many items are in each bin
+		AddressObj[][] bins = new AddressObj[addressObjList.size()][arrayDimension];
+		int[] numItemsInBin = new int[arrayDimension];
+		
+		//Default the arrays (the 2d array will entirely null while the bin counter will be 0 across)
+		for(int i = 0; i < bins.length; i++)
+		{
+			for(int j = 0; j < bins[i].length; j++)
+			{
+				bins[i][j] = null;
+			}
+		}   
+		for(int i = 0; i < numItemsInBin.length; i++)
+		{
+			numItemsInBin[i] = 0;
+		}
+		
+		/*This loop drops each AddressObj into the bins depending on the digit the loop is focused on
+		*After dropping each obj, the next step is to place them back into the ArrayList in the numerical order
+		*of the bins. After the ArrayList is reordered each time, it is important to reset the arrays. 
+		*/
+			while(zipLength < 6)
+			{
+				//Drop in the Addresses into the 2d array and increment the amount of items in each column
+				for(int i = 0; i < addressObjList.size(); i++)
+				{
+					bins[numItemsInBin[addressObjList.get(i).getZipCodeDigit(zipLength)]][addressObjList.get(i).getZipCodeDigit(zipLength)] = addressObjList.get(i);
+					numItemsInBin[addressObjList.get(i).getZipCodeDigit(zipLength)]++;
+				}
+				
+				//Place the bin items into ArrayList into the correct order
+				int down = 0;
+				int across = 0;
+				int arrayIndex = 0;
+			
+				for(int i = 0; i < addressObjList.size()-1; i ++)
+				{
+					while(bins[down][across] != null)
+					{
+						addressObjList.set(arrayIndex, bins[down][across]);
+						arrayIndex++;
+						down++;
+					}
+					if(bins[down][across] == null)
+					{
+						down = 0;
+						across++;
+					}
+				}
+				
+				//Reset the arrays	
+				for(int i = 0; i < bins.length; i++)
+				{
+					for(int j = 0; j < bins[i].length; j++)
+					{
+						bins[i][j] = null;
+					}
+				}   
+			
+				for(int i = 0; i < numItemsInBin.length; i++)
+				{
+					numItemsInBin[i] = 0;
+				}
+				zipLength++;
+			}
+	}
+		
+}
