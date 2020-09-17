@@ -1,0 +1,90 @@
+/**
+ * @author Justin Gillmor
+ * This is the Main class for Project0
+ * Classes that need to be created for this to work include: 
+ * MailAddressInterface, AddressObj, Proj0Helper, and RadixSort
+ * The Text files must be a peer of the src package inside the project folder
+ * (It will not work if the text file is inside the src)
+ * 
+ * The Main method creates an ArrayList of AddressObj, Project0Helper, and a RadixSort at the end Next, 
+ * it prompts the user for the filename, it reads the file and creates an ArrayList as it reads. After 
+ * reading the file, Project0Helper analyzes the original before sorting and analyzes the file after sorting.
+ * If everything runs fine, the program will lastly prompt the user for the outputFileName and a 
+ * PrintWriter writes the toString method of each address's information into a new file within the workspace.
+ * 
+ * Revisions:
+ *     None as of 9/15/20
+ *     
+ * Bugs:
+ *
+ */
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
+public class Main 
+{
+	public static void main(String[] args) throws FileNotFoundException 
+	{
+		//Used an ArrayList<> because it is unbounded and easy to add objects continuously
+		ArrayList<AddressObj> addressObjList = new ArrayList<AddressObj>();
+		Project0Helper helper = new Project0Helper();
+		Scanner input = new Scanner(System.in);
+		System.out.print("What is the file name? ");
+		String inputFileName = input.nextLine();
+		File mailFile = new File(inputFileName);
+		Scanner scan = new Scanner(mailFile);
+		
+		/*
+		*try-catch block to catch the NoSuchElementException for 
+		*when addressLine2 is blank in some of the address inputs
+		*/
+		try
+		{
+			//This block reads through the file and makes an AddressObj for every six lines of info
+			while(scan.hasNextLine())	
+			{
+				String name = scan.nextLine();
+				String addressLine1 = scan.nextLine();
+				String addressLine2 = scan.nextLine();
+				String city = scan.nextLine();
+				String state = scan.nextLine();
+				int zipCode = scan.nextInt();
+				scan.nextLine();
+				AddressObj newAddress = new AddressObj(name, addressLine1, addressLine2, city, state, zipCode);
+				addressObjList.add(newAddress);
+			}
+		}catch(NoSuchElementException e) {}
+		
+		/**
+		*After the ArrayList is made, the helpers go through and check pre-sorting condition,
+		*and post-sorting condition of the ArrayList
+		*/
+		helper.checkStartingOrder(addressObjList);
+		RadixSort sorter = new RadixSort();
+		sorter.sortArray(addressObjList);
+		helper.checkFinalOrder(addressObjList);
+		
+		/**
+		 * If sorting is successful the program will prompt for the outFileName and write to a new 
+		 * file within the workspace folder
+		 */
+		System.out.print("What would you like as the output filename? ");
+		String outputFileName = input.nextLine();
+		PrintWriter outfileWriter = new java.io.PrintWriter(new java.io.File(outputFileName));
+		
+		for(int i = 0; i < addressObjList.size(); i++)
+		{
+			outfileWriter.print(addressObjList.get(i).toString());
+			outfileWriter.flush();
+		}
+		
+		//Make sure to close the PrintWriter and the scanners
+		outfileWriter.close();
+		input.close();
+		scan.close();
+	}
+}
