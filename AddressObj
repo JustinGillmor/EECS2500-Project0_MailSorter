@@ -1,0 +1,130 @@
+/**
+ * @author Justin Gillmor
+ *This class is the AddressObj that implements the MailAdressInterface
+ *includes a default constructor, a constructor, and the getters that return the specific attribute
+ *the program is looking for.
+ */
+public class AddressObj implements MailAddressInterface
+{
+	//Variables that belong to each separate Address
+	protected String name;
+	protected String addressLine1;
+	protected String addressLine2;
+	protected String city;
+	protected String state;
+	protected int zipCode;
+	
+	//Default constructor
+	public AddressObj()
+	{
+		
+	}
+	
+	//Constructs a AddressObj with all of the variable information filled (addressLine2 is never null, but it is sometimes "")
+	public AddressObj(String name, String addressLine1, String addressLine2, String city, String state, int zipCode) 
+	{
+		this.name = name;
+		this.addressLine1 = addressLine1;
+		this.addressLine2 = addressLine2;
+		this.city = city;
+		this.state = state;
+		this.zipCode = zipCode;
+	}
+	
+	//Implemented all of the getters
+	//returns the name of a specific address
+	public String getName() 
+	{
+		return name;
+	}
+
+	//returns the addressLine1 of a specific address
+	public String getAddressLine1() 
+	{
+		return addressLine1;
+	}
+
+	//returns the addressLine2 of a specific address (This will be equivalent to "" sometimes)
+	public String getAddressLine2() 
+	{
+		return addressLine2;
+	}
+
+	//returns the city of a specific address
+	public String getCity() 
+	{
+		return city;
+	}
+
+	//returns the state of a specific address
+	public String getState() 
+	{
+		return state;
+	}
+
+	//returns the int zipCode of a specific address
+	public int getZipCode() 
+	{
+		return zipCode;
+	}
+	
+	/*This method will return the corresponding digit that is requested from the radix sort method
+	 *Modulus 10 will output return the most right digit of the the ZipCode and continuing the function
+	 *with the new remainder will continue to take the most right digit one a time the method can then 
+	 *exit the nested if else statements when the correct digit has been found.
+	 */
+	public int getZipCodeDigit(int digit) 
+	{
+		int remainder = zipCode;
+		int digResult = 0;
+		while(remainder > 0)
+		{
+			if(digit > 0)
+			{
+				digResult = remainder % 10;
+				remainder = remainder / 10;
+				if(digit > 1)
+				{
+					digResult = remainder % 10;
+					remainder = remainder / 10;
+					if(digit > 2)
+					{
+						digResult = remainder % 10;
+						remainder = remainder / 10;
+						if(digit > 3)
+						{
+							digResult = remainder % 10;
+							remainder = remainder / 10;
+							if(digit > 4)
+							{
+								digResult = remainder % 10;
+								remainder = remainder / 10;
+								return digResult;
+							}else 
+							{
+								return digResult;
+							}
+						}else 
+						{
+							return digResult;
+						}
+					}else 
+					{
+						return digResult;
+					}
+				}else 
+				{
+					return digResult;
+				}
+			}
+		}	
+		return 0;
+	}
+	
+	//toString Method that outputs the AddressObj in the same format as it was read
+	public String toString()
+	{
+
+		return (name + "\n" + addressLine1 + "\n" + addressLine2 + "\n" + city + "\n" + state + "\n" + zipCode + "\n");
+	}
+}
